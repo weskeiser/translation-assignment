@@ -1,0 +1,1 @@
+export { trimAll } from "./trimAll";

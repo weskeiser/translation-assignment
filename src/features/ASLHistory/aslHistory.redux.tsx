@@ -4,7 +4,30 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { makeNewHistory } from "./aslHistory.helpers";
-import { addToHistoryAPI, fetchHistoryAPI } from "api";
+
+import { baseUrl } from "api";
+
+const fetchHistoryAPI = () => {
+  return fetch(`${baseUrl}/translations?id=1`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+};
+
+const addToHistoryAPI = (addition: string[]) => {
+  return fetch(`${baseUrl}/translations/1`, {
+    method: "PATCH",
+    headers: {
+      "X-API-Key": "98osduf98sdlkfj342sdlkfj",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      translations: addition,
+    }),
+  }).then((res) => res.json());
+};
 
 // Adapter / initial state
 const aslHistoryAdapter = createEntityAdapter({
@@ -19,7 +42,6 @@ export const fetchHistory = createAsyncThunk(
   "aslHistory/fetchHistory",
   async () => {
     const [user] = await fetchHistoryAPI();
-    console.log(user.translations);
     return user.translations;
   }
 );

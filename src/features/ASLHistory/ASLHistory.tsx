@@ -1,32 +1,42 @@
-import { useAppDispatch, useAppSelector } from "appRedux/hooks";
-import { addToHistory, fetchHistory, selectHistory } from "./aslHistory.redux";
+import {
+  useGetAllUsersQuery,
+  useGetTranslationsQuery,
+  useCreateUserMutation,
+} from "api/translationApi";
+import { useAppDispatch } from "appRedux/hooks";
+import { addToHistory } from "./aslHistory.redux";
 
 const ASLHistory = () => {
   const dispatch = useAppDispatch();
 
-  const handleClick = () => {
-    dispatch(fetchHistory());
+  const { data: translations, error, isLoading } = useGetTranslationsQuery(1);
+
+  const { data } = useGetAllUsersQuery(1);
+
+  const newUser = {
+    id: 2,
+    username: "Bob",
+    password: "Hashed&Salted",
+    translations: ["fishbowl"],
   };
 
-  //@ts-ignore
-  const { entities } = useAppSelector(selectHistory);
-  console.log(entities);
+  const [createUser, result] = useCreateUserMutation();
 
-  const history = useAppSelector(selectHistory);
-  console.log(history);
-  // console.log(selectHistory("fetchHistory"));
-
-  const historyList = () => {
-    if (!history) return null;
-
-    return (
-      <ul>
-        {(history as string[]).map((item: any) => {
-          return <li key={item}>{item}</li>;
-        })}
-      </ul>
-    );
+  const onClicky = () => {
+    createUser(newUser);
   };
+
+  if (error) return <p>Something went wrong...</p>;
+  if (isLoading) return <p>Loading...</p>;
+  if (!translations) return <p>Translations history empty.</p>;
+
+  const translationsList = (
+    <ul>
+      {translations.map((item: any) => {
+        return <li key={item}>{item}</li>;
+      })}
+    </ul>
+  );
 
   const addToAslHistory = () => {
     const addition = "zzlkjdsf8d7fajlk";
@@ -36,9 +46,8 @@ const ASLHistory = () => {
 
   return (
     <div>
-      <button onClick={handleClick}>aslHistory</button>
-      <button onClick={addToAslHistory}>Add To History</button>
-      {historyList()}
+      <button onClick={onClicky}>Add To History</button>
+      {translationsList}
     </div>
   );
 };

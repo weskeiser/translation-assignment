@@ -1,3 +1,1 @@
-export const baseURL = "https://translation-wes.herokuapp.com";
-
-export { addToHistoryAPI, fetchHistoryAPI } from "./aslHistory";
+export const baseUrl = "https://translation-wes.herokuapp.com";

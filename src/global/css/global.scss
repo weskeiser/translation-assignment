@@ -1,0 +1,29 @@
+@font-face {
+  font-family: Sanchez;
+  src: url("/public/fonts/Sanchez/Sanchez-Regular.ttf");
+}
+
+@font-face {
+  font-family: LoveYaLikeASister;
+  src: url("/public/fonts/LoveYaLikeASister/LoveYaLikeASister-Regular.ttf");
+}
+
+:root {
+  --yellow: #ffc75f;
+  --yellow-dark: #e7b355;
+  --purple: #845ec2;
+  --grey: #969696;
+  --light-grey: #efefef;
+}
+
+* {
+  font-family: Sanchez;
+}
+
+html {
+  color: #fff;
+}
+
+h1 {
+  font-family: LoveYaLikeASister;
+}

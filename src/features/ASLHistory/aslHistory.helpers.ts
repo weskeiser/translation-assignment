@@ -1,6 +1,6 @@
-import { IUser } from "global/types";
+import { User } from "global/interfaces";
 
-export const makeNewHistory = (user: IUser, addition: string) => {
+export const makeNewHistory = (user: User, addition: string) => {
   const { translations } = user;
 
   const exists = translations.findIndex((entry) => entry === addition);

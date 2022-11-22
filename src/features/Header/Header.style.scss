@@ -1,0 +1,11 @@
+.header {
+  background-color: var(--yellow);
+  border-bottom: 2px solid #47414155;
+  display: grid;
+
+  & > h1 {
+    font-size: 2em;
+    font-weight: 500;
+    margin: auto;
+  }
+}
