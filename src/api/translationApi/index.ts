@@ -1,5 +1,7 @@
 export {
   translationsApi,
+  useGetUserByTokenQuery,
+  useLazyGetUserByTokenQuery,
   useLazyGetUserByUsernameQuery,
   useLazyGetAllUsersQuery,
   useGetAllUsersQuery,

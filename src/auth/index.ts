@@ -1,3 +1,3 @@
-export { setCredentials, selectUser } from "./Auth.slice";
+export { setCredentials, selectAuthenticated } from "./Auth.slice";
 
 export { AuthWrapper } from "./AuthWrapper";

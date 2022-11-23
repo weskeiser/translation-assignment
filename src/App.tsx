@@ -1,36 +1,34 @@
-import { Home, Login, Signup } from "routes";
+import { Home, Login, Profile } from "routes";
 import "./App.scss";
 import { Route, Routes } from "react-router-dom";
 import { AuthWrapper } from "auth";
 import Header from "features/Header";
-import Temp from "routes/Temp";
 
 const App = () => {
   return (
     <>
       <Header />
 
-      <main>
-        <Routes>
-          <Route
-            path="login"
-            element={<Temp></Temp>}
-          />
-          <Route
-            path="signup"
-            element={<Signup></Signup>}
-          />
+      <Routes>
+        <Route
+          path="login"
+          element={<Login></Login>}
+        />
 
-          <Route
-            index
-            element={
-              <AuthWrapper>
-                <Home></Home>
-              </AuthWrapper>
-            }
-          />
-        </Routes>
-      </main>
+        <Route
+          index
+          element={
+            <AuthWrapper>
+              <Home></Home>
+            </AuthWrapper>
+          }
+        />
+
+        <Route
+          path="profile"
+          element={<Profile></Profile>}
+        />
+      </Routes>
     </>
   );
 };

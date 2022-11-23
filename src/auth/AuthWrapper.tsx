@@ -1,18 +1,38 @@
+import { useLazyGetUserByTokenQuery } from "api/translationApi";
 import { useAppSelector } from "appRedux/hooks";
 import { Navigate } from "react-router-dom";
-import { selectUser } from "./Auth.slice";
+import { selectAuthenticated, setCredentials } from "./Auth.slice";
 
-export const AuthWrapper = ({ children }: any) => {
-  const user = useAppSelector(selectUser);
+interface IAuthWrapper {
+  children: JSX.Element;
+}
 
-  if (!user) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-      />
-    );
+export const AuthWrapper = ({ children }: IAuthWrapper) => {
+  const [getUserByToken] = useLazyGetUserByTokenQuery();
+
+  const { user } = useAppSelector(selectAuthenticated);
+  if (user) return children;
+
+  const token = localStorage.getItem("app42auth");
+
+  // implement optimistic update
+  if (token) {
+    const user = async () => {
+      return await getUserByToken(token);
+    };
+
+    setCredentials({
+      user,
+      token,
+    });
+
+    return children;
   }
 
-  return children;
+  return (
+    <Navigate
+      to="/login"
+      replace
+    />
+  );
 };

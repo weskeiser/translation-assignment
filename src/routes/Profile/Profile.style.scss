@@ -1,0 +1,50 @@
+.profile {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+
+  &_temp {
+    background-color: var(--yellow);
+    height: 100%;
+    display: grid;
+
+    h1 {
+      font-size: 2em;
+      text-align: center;
+      margin: auto;
+      line-height: 1.5em;
+    }
+
+    button {
+      margin: auto;
+      width: 6em;
+      height: 3em;
+      font-size: 2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      border-radius: 1em;
+      border: 0;
+      color: #fff;
+      background-color: rgb(167, 36, 36);
+    }
+  }
+
+  &_translations {
+    height: 100%;
+    display: grid;
+    margin: 1em;
+
+    &_list {
+      filter: drop-shadow(0 0 0.5em #00000077);
+      background-color: #fff;
+      max-width: 60em;
+      max-height: 40em;
+      border-radius: 1em;
+      min-height: 60%;
+      width: 100%;
+      margin: auto;
+      margin-top: 1em;
+      display: grid;
+      grid-template-rows: 4fr 1fr;
+    }
+  }
+}

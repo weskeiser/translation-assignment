@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 
 import App from "./App";
-import { Login, Home, Signup, Error } from "./routes";
+import { Login, Home, Error } from "./routes";
 import { AuthWrapper } from "auth";
 
 const container = document.getElementById("root")!;
@@ -29,10 +29,6 @@ const router = createBrowserRouter(
       <Route
         path="login"
         element={<Login></Login>}
-      />
-      <Route
-        path="signup"
-        element={<Signup></Signup>}
       />
 
       <Route

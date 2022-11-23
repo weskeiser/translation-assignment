@@ -1,0 +1,82 @@
+@media screen and (min-width: 1000px) {
+  .home_input > form {
+    width: 100%;
+  }
+}
+
+.home {
+  display: grid;
+  grid-template-rows: 15em 1fr;
+  height: 100%;
+
+  &_input {
+    background-color: var(--yellow);
+    display: grid;
+    margin-bottom: 3em;
+
+    form {
+      margin: auto;
+      padding-inline: 1em;
+      max-width: 60em;
+
+      input {
+        border: 2px solid #fff;
+      }
+    }
+  }
+
+  &_translation {
+    margin: auto;
+    display: grid;
+    height: 100%;
+    width: clamp(20em, 60em, 90%);
+
+    &_box {
+      filter: drop-shadow(0 0 0.5em #00000077);
+      background-color: #fff;
+      max-width: 60em;
+      border-radius: 1em;
+      min-height: 70%;
+      width: 100%;
+      margin: auto;
+      margin-top: 1em;
+      display: grid;
+      grid-template-rows: 4fr 1fr;
+
+      output {
+        color: rgb(139, 115, 21);
+        padding: 1em;
+
+        span {
+          display: inline-block;
+          font-size: 1.5em;
+          border-radius: 0.2em;
+          filter: drop-shadow(0 0 0.2em #00000077);
+          background-color: #e7def6;
+          margin-right: 0.5em;
+          margin-bottom: 0.8em;
+
+          img {
+            max-width: 1.3em;
+          }
+        }
+      }
+
+      &-bottom {
+        background-color: var(--purple);
+        border-radius: 0 0 1em 1em;
+        display: grid;
+        margin-top: auto;
+        min-height: 4em;
+
+        button {
+          margin: auto auto auto 1em;
+          width: 10em;
+          padding: 0.5em;
+          border-radius: 0.7em;
+          border: 0;
+        }
+      }
+    }
+  }
+}

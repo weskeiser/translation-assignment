@@ -1,14 +1,19 @@
 body {
   display: grid;
   background-color: bisque;
-  width: 100vw;
 
   #root {
     height: 100vh;
-    display: grid;
-    grid-template-rows: 10vh 1fr;
     width: 100%;
     max-width: 120em;
     margin-inline: auto;
+
+    // display: grid;
+    // grid-template-rows: 10vh 1fr;
   }
+}
+
+main {
+  background-color: #fff;
+  height: 100%;
 }
