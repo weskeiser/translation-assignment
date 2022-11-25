@@ -1,83 +1,57 @@
 import {
   useCreateUserMutation,
+  useGetUserByTokenQuery,
   useLazyGetAllUsersQuery,
-  useLazyGetUserByTokenQuery,
   useLazyGetUserByUsernameQuery,
 } from "api/translationApi";
-import { useAppSelector } from "appRedux/hooks";
-import { selectAuthenticated, setCredentials } from "auth";
+import { useAppDispatch, useAppSelector } from "appRedux/hooks";
+import { getCredentials, setCredentials } from "auth";
 import Form from "features/common/Form";
-import { User } from "global/interfaces";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Login.style.scss";
 import { AuthForm } from "./Login.types";
 
-const Temp = () => {
+const Login = () => {
+  const token = localStorage.getItem("app42auth");
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
   const [getUserByUsername] = useLazyGetUserByUsernameQuery();
   const [getAllUsers] = useLazyGetAllUsersQuery();
-  const [createUser] = useCreateUserMutation();
-  const [getUserByToken] = useLazyGetUserByTokenQuery();
+  const [createUser, { data: createdUser }] = useCreateUserMutation();
+  const { data: userFromToken } = useGetUserByTokenQuery(token ?? "");
 
-  const { user } = useAppSelector(selectAuthenticated);
-  if (user)
-    return (
-      <Navigate
-        to="/"
-        replace
-      />
-    );
-
-  const token = localStorage.getItem("app42auth");
-  if (token) {
-    const user = async () => {
-      return await getUserByToken(token);
-    };
-
-    setCredentials({
-      user,
-      token,
-    });
-
-    return (
-      <Navigate
-        to="/"
-        replace
-      />
-    );
-  }
+  const { currentUser } = useAppSelector(getCredentials);
+  if (currentUser) navigate("/");
 
   const handleSubmit = async (e: AuthForm) => {
     e.preventDefault();
 
     const username = e.currentTarget.username.value.trim();
+    const { data: existingUser } = await getUserByUsername(username);
 
-    const { data: user } = await getUserByUsername(username);
-
-    if (user) {
-      //  modal + return
+    if (existingUser) {
       console.log("username taken");
       return;
     }
 
-    const { data: allUsersData } = await getAllUsers(false);
-    const amountOfUsers = allUsersData.length;
+    const { data: allUser } = await getAllUsers(false);
+    const amountOfUsers = allUser.length;
 
     const newUser = {
       id: amountOfUsers + 1,
       username,
       translations: [],
+      token: username,
     };
 
-    const res = await createUser(newUser);
-    //@ts-ignore  - implement error handling
-    const { data: newUserName } = res;
+    await createUser(newUser);
 
-    //@ts-ignore  - implement error handling
-    localStorage.setItem("app42auth", newUserName);
-    //@ts-ignore  - implement error handling
-    setCredentials(newUser, newUserName);
+    localStorage.setItem("app42auth", username);
 
-    // Navigate({ to: "/" });
+    dispatch(setCredentials({ currentUser: username, token: "testToken42" }));
+
+    navigate("/");
   };
 
   return (
@@ -114,7 +88,7 @@ const Temp = () => {
             type="text"
             required
             minLength={5}
-            maxLength={15}
+            maxLength={17}
             name="username"
             placeholder="What's your name?"
           />
@@ -136,4 +110,4 @@ const Temp = () => {
   );
 };
 
-export default Temp;
+export default Login;

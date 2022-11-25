@@ -32,19 +32,29 @@
     height: 100%;
     display: grid;
     margin: 1em;
+    color: #000;
 
     &_list {
       filter: drop-shadow(0 0 0.5em #00000077);
       background-color: #fff;
-      max-width: 60em;
-      max-height: 40em;
+      width: clamp(20em, 60em, 90%);
       border-radius: 1em;
-      min-height: 60%;
-      width: 100%;
+      min-height: 70%;
       margin: auto;
       margin-top: 1em;
-      display: grid;
-      grid-template-rows: 4fr 1fr;
+      padding: 1em;
+
+      dt {
+        font-size: 2em;
+      }
     }
+  }
+
+  &_decoration {
+    background-color: var(--purple);
+    height: 10em;
+    width: 100%;
+    margin-top: auto;
+    border-radius: 0 0 1em 1em;
   }
 }

@@ -1,4 +1,6 @@
+import { useSetTranslationsMutation } from "api/translationApi";
 import Form from "features/common/Form";
+import React from "react";
 import { FormEvent, useRef, useState } from "react";
 import "./Home.style.scss";
 
@@ -8,70 +10,89 @@ export interface TranslateForm extends FormEvent<HTMLFormElement> {
 
 const Home = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [wordsFromInput, setWordsFromInput] = useState<string[]>(["bro."]);
+  const [wordsFromInput, setWordsFromInput] = useState<string[]>([
+    "A short sentence. Followed by another. Followed by a little longer of a sentence. And boom!",
+  ]);
+
+  const [setTranslationsInDB] = useSetTranslationsMutation();
 
   const onSubmit = (e: TranslateForm) => {
     e.preventDefault();
-    const queryInput = e.currentTarget.query;
+    const { value: text } = e.currentTarget.query;
 
-    setWordsFromInput(queryInput.value.split(" "));
+    setWordsFromInput(text.split(" "));
+
+    setTranslationsInDB({ id: 1, text });
 
     (inputRef.current as HTMLInputElement).value = "";
   };
 
   const showOutput = (wordsFromInput: string[]) => {
     let incr = 1;
+    let even = true;
 
-    const signFromWord = (word: string) => {
+    const signsFromWord = (word: string) => {
       return word.split("").map((letter: string, idx) => {
         const regex = /[A-Z]/gi;
         const alphaNumeric = letter.match(regex);
 
         if (!alphaNumeric) {
           const endOfWord = idx === word.length - 1;
-          if (!endOfWord) return [letter, false];
+          if (!endOfWord) return letter;
 
           switch (letter) {
             case "?": {
-              return [letter, true];
+              even = !even;
+              return [letter];
             }
             case "!": {
-              return [letter, true];
+              even = !even;
+              return [letter];
             }
             case ".": {
-              return [letter, true];
+              even = !even;
+              return [letter];
             }
             default: {
-              return [letter, false];
+              return letter;
             }
           }
         }
 
-        return [
+        return (
           <img
             key={Math.random() + letter + Math.random() + incr++}
             src={`images/signs/${letter.toLowerCase()}.png`}
             alt={`Letter ${letter} in ASL`}
-          ></img>,
-          false,
-        ];
+          ></img>
+        );
       });
     };
 
     return wordsFromInput.map((word: string) => {
-      let even = true;
+      const evenOrOdd = `sign_${even ? "even" : "odd"}`;
 
-      const [...sign] = signFromWord(word);
-      console.log(sign);
+      let signs = signsFromWord(word);
+      const lastLetter = signs[signs.length - 1];
+      let endOfSentence = false;
+
+      if (Array.isArray(lastLetter)) {
+        endOfSentence = true;
+        signs.pop();
+      }
 
       return (
-        <span
-          key={Math.random() + word + incr++}
-          title={word}
-          className={`sign_${even ? "even" : "odd"}`}
-        >
-          {[...sign]}
-        </span>
+        <React.Fragment key={Math.random() + word + incr++}>
+          <span
+            title={word}
+            className={`${evenOrOdd} ${endOfSentence ? "last-word" : ""}`}
+          >
+            {signs}
+          </span>
+          {endOfSentence ? (
+            <span className={`${evenOrOdd} end-char`}>{lastLetter}</span>
+          ) : null}
+        </React.Fragment>
       );
     });
   };

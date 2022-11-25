@@ -26,7 +26,11 @@ const App = () => {
 
         <Route
           path="profile"
-          element={<Profile></Profile>}
+          element={
+            <AuthWrapper>
+              <Profile></Profile>
+            </AuthWrapper>
+          }
         />
       </Routes>
     </>

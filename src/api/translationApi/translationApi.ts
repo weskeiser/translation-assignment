@@ -2,10 +2,21 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseUrl } from "api";
 import { User } from "global/interfaces";
 
+const fetchWithBQ = async (url: string, ...options: any) => {
+  return fetch(`${baseUrl}/translations${url}`, ...options)
+    .then((res) => {
+      if (!res.ok) {
+        console.log(res);
+      }
+      return res.json();
+    })
+    .then((data) => data);
+};
+
 export const translationsApi = createApi({
   reducerPath: "translationsApi",
   baseQuery: fetchBaseQuery({ baseUrl: `${baseUrl}/translations` }),
-  tagTypes: ["Authenticated", "Translations"],
+  tagTypes: ["authenticated", "translations"],
   endpoints: (rtk) => ({
     // >>> Users >>>
     // >>>>>>>>>>>>>
@@ -20,20 +31,16 @@ export const translationsApi = createApi({
         },
         body: newUser,
       }),
-      transformResponse: ({ username }: User) => {
+      transformResponse: ({ username }: User, bla, bla2) => {
         return username;
       },
 
-      invalidatesTags: [{ type: "Authenticated" }],
+      invalidatesTags: [{ type: "authenticated" }],
     }),
-
-    //
 
     getUserById: rtk.query({
       query: (userId: number) => `/?id=${userId}`,
     }),
-
-    //
 
     getUserByUsername: rtk.query({
       query: (username: string) => `/?username=${username}`,
@@ -42,13 +49,16 @@ export const translationsApi = createApi({
       },
     }),
 
-    //
-
     getUserByToken: rtk.query({
       query: (token: string) => `/?token=${token}`,
+      transformResponse: (res) => {
+        console.log(res);
+        return res;
+      },
+      transformErrorResponse: (err) => {
+        return err;
+      },
     }),
-
-    //
 
     getAllUsers: rtk.query({
       query: () => `/`,
@@ -58,26 +68,45 @@ export const translationsApi = createApi({
     // >>>>>>>>>>>>>>>>>>>>
     //
 
-    getTranslations: rtk.query({
+    getTranslations: rtk.query<string[], number>({
       query: (userId: number) => `/?id=${userId}`,
       transformResponse: ([result]: User[]) => {
         const { translations } = result;
         return translations;
       },
 
-      providesTags: [{ type: "Translations" }],
+      providesTags: [{ type: "translations" }],
     }),
 
-    //
-
     setTranslations: rtk.mutation({
-      query: ({ id, ...translations }) => ({
-        url: `/${id}`,
-        method: "PATCH",
-        body: translations,
-      }),
+      async queryFn({ id, text }: { id: number; text: string }) {
+        const [fetchedUser]: User[] = await fetchWithBQ(`?id=${id}`);
+        if (!fetchedUser) return { error: "blabla" };
 
-      invalidatesTags: [{ type: "Translations" }],
+        const { translations: prevTranslations } = fetchedUser;
+
+        if (prevTranslations.length > 9) {
+          prevTranslations.pop();
+        }
+        prevTranslations.unshift(text);
+
+        const newTranslations = prevTranslations;
+
+        const res = await fetchWithBQ(`/${id}`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            translations: newTranslations,
+          }),
+          headers: {
+            "X-API-Key": "98osduf98sdlkfj342sdlkfj",
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log(await res);
+
+        return res.data ? { data: res.data } : { error: res.error };
+      },
     }),
   }),
 });
