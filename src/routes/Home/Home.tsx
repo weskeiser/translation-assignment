@@ -11,7 +11,16 @@ export interface TranslateForm extends FormEvent<HTMLFormElement> {
 const Home = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [wordsFromInput, setWordsFromInput] = useState<string[]>([
-    "A short sentence. Followed by another. Followed by a little longer of a sentence. And boom!",
+    "A",
+    "short",
+    "sentence.",
+    "Followed",
+    "by",
+    "another.",
+    "Followed",
+    "by",
+    "a",
+    "little.",
   ]);
 
   const [setTranslationsInDB] = useSetTranslationsMutation();
@@ -60,17 +69,24 @@ const Home = () => {
         }
 
         return (
-          <img
-            key={Math.random() + letter + Math.random() + incr++}
-            src={`images/signs/${letter.toLowerCase()}.png`}
-            alt={`Letter ${letter} in ASL`}
-          ></img>
+          <>
+            <span
+              className="sign"
+              key={Math.random() + letter + Math.random() + incr++}
+            >
+              <img
+                src={`images/signs/${letter.toLowerCase()}.png`}
+                alt={`Letter ${letter} in ASL`}
+              ></img>
+              <span className="letter">{letter}</span>
+            </span>
+          </>
         );
       });
     };
 
     return wordsFromInput.map((word: string) => {
-      const evenOrOdd = `sign_${even ? "even" : "odd"}`;
+      const evenOrOdd = `word_${even ? "even" : "odd"}`;
 
       let signs = signsFromWord(word);
       const lastLetter = signs[signs.length - 1];
@@ -85,12 +101,14 @@ const Home = () => {
         <React.Fragment key={Math.random() + word + incr++}>
           <span
             title={word}
-            className={`${evenOrOdd} ${endOfSentence ? "last-word" : ""}`}
+            className={`word ${evenOrOdd}`}
           >
             {signs}
           </span>
           {endOfSentence ? (
-            <span className={`${evenOrOdd} end-char`}>{lastLetter}</span>
+            <span className={`word ${evenOrOdd} end-char`}>
+              <span>{lastLetter}</span>
+            </span>
           ) : null}
         </React.Fragment>
       );

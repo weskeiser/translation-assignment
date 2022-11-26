@@ -1,6 +1,5 @@
 import {
   useCreateUserMutation,
-  useGetUserByTokenQuery,
   useLazyGetAllUsersQuery,
   useLazyGetUserByUsernameQuery,
 } from "api/translationApi";
@@ -12,19 +11,18 @@ import "./Login.style.scss";
 import { AuthForm } from "./Login.types";
 
 const Login = () => {
-  const token = localStorage.getItem("app42auth");
   const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
+
   const [getUserByUsername] = useLazyGetUserByUsernameQuery();
   const [getAllUsers] = useLazyGetAllUsersQuery();
-  const [createUser, { data: createdUser }] = useCreateUserMutation();
-  const { data: userFromToken } = useGetUserByTokenQuery(token ?? "");
+  const [createUser] = useCreateUserMutation();
 
-  const { currentUser } = useAppSelector(getCredentials);
-  if (currentUser) navigate("/");
+  // check for token
+  //-- const { userId } = useAppSelector(getCredentials);
+  //-- if (userId) navigate("/");
 
-  const handleSubmit = async (e: AuthForm) => {
+  const loginUser = async (e: AuthForm) => {
     e.preventDefault();
 
     const username = e.currentTarget.username.value.trim();
@@ -35,11 +33,14 @@ const Login = () => {
       return;
     }
 
-    const { data: allUser } = await getAllUsers(false);
-    const amountOfUsers = allUser.length;
+    const { data: allUsers } = await getAllUsers(false);
+    const amountOfUsers = allUsers.length;
+
+    const newId = amountOfUsers + 1;
+    const newToken = "tempNewToken";
 
     const newUser = {
-      id: amountOfUsers + 1,
+      id: newId,
       username,
       translations: [],
       token: username,
@@ -47,9 +48,10 @@ const Login = () => {
 
     await createUser(newUser);
 
-    localStorage.setItem("app42auth", username);
+    localStorage.setItem("app42token", newToken);
+    localStorage.setItem("app42userId", newId);
 
-    dispatch(setCredentials({ currentUser: username, token: "testToken42" }));
+    dispatch(setCredentials({ userId: newId, token: newToken }));
 
     navigate("/");
   };
@@ -82,7 +84,7 @@ const Login = () => {
       <section className="login-middle">
         <Form
           aria-label="Username input"
-          onSubmit={handleSubmit}
+          onSubmit={loginUser}
         >
           <input
             type="text"

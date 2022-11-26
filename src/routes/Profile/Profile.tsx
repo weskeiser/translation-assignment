@@ -1,26 +1,20 @@
 import { useGetTranslationsQuery } from "api/translationApi";
-import { useAppDispatch, useAppSelector } from "appRedux/hooks";
-import { getCredentials, setCredentials } from "auth";
+import { useAppSelector } from "appRedux/hooks";
+import { getCredentials } from "auth";
 import "./Profile.style.scss";
 
 const Profile = () => {
-  const { data: user, error, isLoading } = useGetTranslationsQuery(1);
-
-  const dispatch = useAppDispatch();
-
+  const { userId } = useAppSelector(getCredentials);
   const { data: translations } = useGetTranslationsQuery(1);
 
-  const test = useAppSelector(getCredentials);
-  console.log("auth:", test);
+  console.log(userId);
 
-  const onClick = () => {
-    console.log(test);
+  const logOut = () => {
+    //clear history
+    //clear localStorage
+    //clear credentials
+    //clear redirect
   };
-
-  if (error) return <p>Something went wrong...</p>;
-  if (isLoading) return <p>Loading...</p>;
-  if (!user) return <p>Translations history empty.</p>;
-  console.log(translations);
 
   return (
     <main className="profile">
@@ -28,7 +22,7 @@ const Profile = () => {
         <h1>
           You are logged in as <br /> *
         </h1>
-        <button onClick={onClick}>Log out</button>
+        <button onClick={logOut}>Log out</button>
       </div>
 
       <div className="profile_translations">
@@ -45,3 +39,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
+// if (error) return <p>Something went wrong...</p>;
+// if (isLoading) return <p>Loading...</p>;
+// if (!user) return <p>Translations history empty.</p>;

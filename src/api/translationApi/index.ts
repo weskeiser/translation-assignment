@@ -1,7 +1,5 @@
 export {
   translationsApi,
-  useGetUserByTokenQuery,
-  useLazyGetUserByTokenQuery,
   useLazyGetUserByUsernameQuery,
   useLazyGetAllUsersQuery,
   useGetAllUsersQuery,
@@ -9,4 +7,5 @@ export {
   useCreateUserMutation,
   useGetTranslationsQuery,
   useSetTranslationsMutation,
+  useLazyGetUserByIdQuery,
 } from "./translationApi";

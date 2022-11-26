@@ -2,8 +2,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseUrl } from "api";
 import { User } from "global/interfaces";
 
-const fetchWithBQ = async (url: string, ...options: any) => {
-  return fetch(`${baseUrl}/translations${url}`, ...options)
+const fetchWithBQ = async (url: string, options?: any) => {
+  return fetch(`${baseUrl}/translations${url}`, {
+    headers: {
+      "X-API-Key": "98osduf98sdlkfj342sdlkfj",
+      "Content-Type": "application/json",
+    },
+    ...options,
+  })
     .then((res) => {
       if (!res.ok) {
         console.log(res);
@@ -18,22 +24,19 @@ export const translationsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${baseUrl}/translations` }),
   tagTypes: ["authenticated", "translations"],
   endpoints: (rtk) => ({
-    // >>> Users >>>
-    // >>>>>>>>>>>>>
-
     createUser: rtk.mutation({
       query: (newUser: User) => ({
         url: "/",
         method: "POST",
+        body: newUser,
         headers: {
           "X-API-Key": "98osduf98sdlkfj342sdlkfj",
           "Content-Type": "application/json",
         },
-        body: newUser,
       }),
-      transformResponse: ({ username }: User, bla, bla2) => {
-        return username;
-      },
+      // transformResponse: ({ username }: User) => {
+      //   return username;
+      // },
 
       invalidatesTags: [{ type: "authenticated" }],
     }),
@@ -46,17 +49,6 @@ export const translationsApi = createApi({
       query: (username: string) => `/?username=${username}`,
       transformResponse: ([result]: User[]) => {
         return result;
-      },
-    }),
-
-    getUserByToken: rtk.query({
-      query: (token: string) => `/?token=${token}`,
-      transformResponse: (res) => {
-        console.log(res);
-        return res;
-      },
-      transformErrorResponse: (err) => {
-        return err;
       },
     }),
 
@@ -92,21 +84,17 @@ export const translationsApi = createApi({
 
         const newTranslations = prevTranslations;
 
-        const res = await fetchWithBQ(`/${id}`, {
+        return await fetchWithBQ(`/${id}`, {
           method: "PATCH",
           body: JSON.stringify({
             translations: newTranslations,
           }),
-          headers: {
-            "X-API-Key": "98osduf98sdlkfj342sdlkfj",
-            "Content-Type": "application/json",
-          },
-        });
-
-        console.log(await res);
-
-        return res.data ? { data: res.data } : { error: res.error };
+        }).then((res) =>
+          res.data ? { data: res.data } : { error: res.error }
+        );
       },
+
+      invalidatesTags: [{ type: "translations" }],
     }),
   }),
 });
@@ -114,8 +102,7 @@ export const translationsApi = createApi({
 export const {
   useLazyGetUserByUsernameQuery,
   useLazyGetAllUsersQuery,
-  useLazyGetUserByTokenQuery,
-  useGetUserByTokenQuery,
+  useLazyGetUserByIdQuery,
   useGetUserByIdQuery,
   useGetAllUsersQuery,
   useCreateUserMutation,

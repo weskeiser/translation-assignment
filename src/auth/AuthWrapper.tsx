@@ -1,37 +1,58 @@
-import { useLazyGetUserByTokenQuery } from "api/translationApi";
+import { useLazyGetUserByIdQuery } from "api/translationApi";
 import { useAppDispatch, useAppSelector } from "appRedux/hooks";
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { IAuthState, getCredentials, setCredentials } from "./Auth.slice";
+import { getCredentials, setCredentials } from "./Auth.slice";
 
 interface IAuthWrapper {
   children: JSX.Element;
 }
 
 export const AuthWrapper = ({ children }: IAuthWrapper) => {
-  const token = localStorage.getItem("app42auth");
-
   const dispatch = useAppDispatch();
-  const [getUserByToken, { data: userFromToken }] =
-    useLazyGetUserByTokenQuery();
-  const { currentUser } = useAppSelector(getCredentials);
+  const [getUserById, userByIdResponse] = useLazyGetUserByIdQuery();
 
-  if (currentUser) return children;
+  const { userId } = useAppSelector(getCredentials);
+  const token = localStorage.getItem("app42token");
+  const storageIdString = localStorage.getItem("app42userId");
+  const storageId = storageIdString ? parseInt(storageIdString) : false;
 
-  // implement optimistic update
+  useEffect(() => {
+    if (storageId && !userId) {
+      getUserById(storageId);
+    }
+  }, [getUserById, storageId, userId]);
 
-  const authInfo = {
-    currentUser: userFromToken,
-    token,
-  };
-
-  if (token) {
+  if (userId) {
     return children;
   }
 
-  return (
-    <Navigate
-      to="/login"
-      replace
-    />
-  );
+  if (!token)
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+
+  const { isLoading, isSuccess, isError, data: fetchedUser } = userByIdResponse;
+
+  if (isLoading) return <p>Authenticating...</p>;
+  if (isError) return <p>Error...</p>;
+
+  if (isSuccess) {
+    const [user] = fetchedUser;
+
+    if (!user)
+      return (
+        <Navigate
+          to="/login"
+          replace
+        />
+      );
+
+    dispatch(setCredentials({ userId: user.id, token }));
+  }
+
+  return <p>Authenticating...</p>;
 };

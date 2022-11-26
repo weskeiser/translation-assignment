@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "appRedux/store";
-import { User } from "global/interfaces";
 
 export interface IAuthState {
-  currentUser: User | null;
+  userId: number | null;
   token: string | null;
 }
 
-const initialState: IAuthState = { currentUser: null, token: null };
+const initialState: IAuthState = { userId: null, token: null };
 
 const slice = createSlice({
   name: "auth",
@@ -15,9 +14,9 @@ const slice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      { payload: { currentUser, token } }: { payload: IAuthState }
+      { payload: { userId, token } }: { payload: IAuthState }
     ) => {
-      state.currentUser = currentUser;
+      state.userId = userId;
       state.token = token;
     },
   },
