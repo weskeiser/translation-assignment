@@ -1,11 +1,14 @@
 .profile {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &_upper {
     background-color: var(--yellow);
     height: 100%;
     display: grid;
+    min-height: 18em;
+    max-height: 25em;
 
     h1 {
       font-size: 3em;
@@ -21,11 +24,10 @@
     }
 
     &_buttons {
+      display: grid;
+      width: clamp(1em, 60em, 95%);
       margin: auto;
-      display: flex;
-      gap: 5vw;
-      width: clamp(1em, 100%, 30em);
-      // width: 100%;
+      grid-template-columns: 1fr 1fr;
 
       button {
         margin: auto;
@@ -37,13 +39,19 @@
         border-radius: 1em;
         border: 0;
         color: var(--white);
-        background-color: rgb(138, 45, 45);
+        background-color: rgb(173, 105, 9);
         filter: drop-shadow(0 0 0.5em #00000044);
         cursor: pointer;
+
+        &:hover {
+          background-color: #845ec233;
+          color: var(--purple);
+          filter: drop-shadow(0 0 0.5em var(--purple));
+        }
       }
 
-      .profile_upper_buttons-clear {
-        background-color: rgb(173, 105, 9);
+      .profile_upper_buttons-signout {
+        background-color: rgb(138, 45, 45);
       }
     }
   }
@@ -51,30 +59,48 @@
   &_translations {
     height: 100%;
     display: grid;
-    margin: 1em;
-    color: #000;
 
     &_list {
+      overflow: scroll;
       filter: drop-shadow(0 0 0.5em #00000077);
       background-color: var(--white);
       width: clamp(20em, 60em, 90%);
-      border-radius: 1em;
+      border-radius: 1em 1em 0 0;
       min-height: 70%;
-      margin: auto;
+      margin-inline: auto;
       margin-top: 1em;
       padding: 1em;
 
-      dt {
-        font-size: 2em;
+      li {
+        margin-bottom: 1.5em;
+
+        button {
+          text-align: left;
+          border: 0;
+          background-color: #fff;
+          font-size: 2em;
+          color: var(--grey);
+
+          &:hover {
+            // background-color: red;
+            background-color: #ffffff00;
+            color: var(--purple);
+            filter: drop-shadow(0 0 0.5em var(--purple));
+          }
+        }
       }
     }
-  }
 
-  &_decoration {
-    background-color: var(--purple);
-    height: 10em;
-    width: 100%;
-    margin-top: auto;
-    border-radius: 0 0 1em 1em;
+    &_decoration {
+      background-color: var(--purple);
+      height: 1em;
+      width: 100%;
+      width: clamp(20em, 60em, 90%);
+      padding-inline: 1em;
+      margin-inline: auto;
+      margin-bottom: auto;
+      border-radius: 0 0 1em 1em;
+      margin-bottom: auto;
+    }
   }
 }

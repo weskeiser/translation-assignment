@@ -1,6 +1,6 @@
 import { useAppSelector } from "appRedux/hooks";
+import { getCredentials } from "auth/Auth.slice";
 import { useMemo } from "react";
-import { getCredentials } from "./Auth.slice";
 
 export const useAuth = () => {
   const user = useAppSelector(getCredentials);

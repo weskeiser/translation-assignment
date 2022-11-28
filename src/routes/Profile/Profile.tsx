@@ -6,6 +6,8 @@ import { useAppDispatch } from "appRedux/hooks";
 import { setCredentials, useAuth } from "auth";
 import { useNavigate } from "react-router-dom";
 import "./Profile.style.scss";
+import { MouseEvent, useState } from "react";
+import Translation from "features/Translation";
 
 const Profile = () => {
   const { userId } = useAuth();
@@ -13,22 +15,31 @@ const Profile = () => {
   const [clearTranslationsMutation] = useClearTranslationsMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [translationShown, setTranslationShown] = useState<string[] | null>(
+    null
+  );
 
   const signOut = () => {
-    //clear history
-    clearTranslationsMutation(userId);
-    //clear localStorage
+    // Clear localStorage
     localStorage.removeItem("app42token");
     localStorage.removeItem("app42userId");
-    //clear credentials
-    dispatch(setCredentials({ userId: null, token: "", username: "" }));
 
+    // Unset credentials
+    dispatch(setCredentials({ userId: null, token: null, username: null }));
+
+    // Redirect to login
     navigate("/login");
-    //clear redirect
   };
 
   const clearTranslations = () => {
     clearTranslationsMutation(userId);
+  };
+
+  const toggleTranslation = (e: MouseEvent<HTMLButtonElement>) => {
+    if (translationShown) return setTranslationShown(null);
+
+    const { innerText } = e.target as HTMLButtonElement;
+    setTranslationShown(innerText.split(" "));
   };
 
   return (
@@ -37,27 +48,38 @@ const Profile = () => {
         <h1>Profile</h1>
 
         <div className="profile_upper_buttons">
-          <button
-            className="profile_upper_buttons-clear"
-            onClick={clearTranslations}
-          >
-            Clear History
-          </button>
+          <button onClick={clearTranslations}>Clear History</button>
 
-          <button onClick={signOut}>Log out</button>
+          <button
+            onClick={signOut}
+            className="profile_upper_buttons-signout"
+          >
+            Log out
+          </button>
         </div>
 
         <p>Translation history</p>
       </section>
 
       <section className="profile_translations">
-        <dl className="profile_translations_list">
-          {translations &&
+        <ul className="profile_translations_list">
+          {translationShown ? (
+            <li>
+              <button onClick={toggleTranslation}>
+                <Translation plainText={translationShown} />
+              </button>
+            </li>
+          ) : translations ? (
             translations.map((item) => {
-              return <dt key={item}>{item}</dt>;
-            })}
-        </dl>
-        {/* <div className="profile_translations_decoration">asldkfj</div> */}
+              return (
+                <li key={item}>
+                  <button onClick={toggleTranslation}>{item}</button>
+                </li>
+              );
+            })
+          ) : null}
+        </ul>
+        <div className="profile_translations_decoration"></div>
       </section>
     </main>
   );

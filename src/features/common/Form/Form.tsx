@@ -8,6 +8,7 @@ interface IForm {
   light?: boolean;
   children: JSX.Element;
   onSubmit?: any;
+  onBtnClick?: () => any;
 }
 
 // -------------------------------
@@ -16,7 +17,14 @@ interface IForm {
 // 1. Also change height of input
 // 2. Refresh page
 
-const Form = ({ height, light, className, children, ...rest }: IForm) => {
+const Form = ({
+  height,
+  light,
+  className,
+  children,
+  onBtnClick,
+  ...rest
+}: IForm) => {
   return (
     <form
       className={`${className} form_page-primary`}
@@ -36,6 +44,7 @@ const Form = ({ height, light, className, children, ...rest }: IForm) => {
       {children}
 
       <ArrowBtn
+        onClick={onBtnClick}
         style={{ height: `${height}` }}
         type="submit"
       />

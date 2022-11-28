@@ -35,7 +35,7 @@ export const AuthWrapper = ({ children }: IAuthWrapper) => {
       const [user] = fetchedUser;
 
       // If !user at this step, user has been removed from database
-      if (!user) navigate("/login");
+      if (!user) navigate("/login", { replace: true });
 
       if (user && user.token === token) {
         dispatch(
@@ -43,7 +43,7 @@ export const AuthWrapper = ({ children }: IAuthWrapper) => {
         );
       }
     }
-  }, [token, isSuccess, fetchedUser, dispatch]);
+  }, [token, isSuccess, fetchedUser, dispatch, navigate]);
 
   // -- If error
   if (isError) return <p>Error...</p>;

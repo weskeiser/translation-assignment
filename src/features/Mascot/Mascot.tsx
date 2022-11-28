@@ -1,12 +1,10 @@
 import "./Mascot.style.scss";
 
 const Mascot = ({ ...props }) => {
-  const className = props.className ? `${props.className} mascot` : "mascot";
-
   return (
     <div
       {...props}
-      className={className}
+      className={`${props.className} mascot`}
       aria-label="Mascot logo for Lost in Translation"
     >
       <div>

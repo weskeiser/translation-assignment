@@ -3,11 +3,11 @@ import { RootState } from "appRedux/store";
 
 export interface IAuthState {
   userId: number | null;
-  username: string | "";
-  token: string | "";
+  username: string | null;
+  token: string | null;
 }
 
-const initialState: IAuthState = { userId: null, username: "", token: "" };
+const initialState: IAuthState = { userId: null, username: null, token: null };
 
 const slice = createSlice({
   name: "auth",

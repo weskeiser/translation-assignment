@@ -4,6 +4,11 @@
   grid-template-columns: 1fr 6fr 1fr;
   max-width: 60em;
 
+  &:focus-within,
+  &:hover {
+    filter: drop-shadow(0 0 0.5em var(--purple));
+  }
+
   & > div {
     height: 4em;
     grid-column: 1/2;
@@ -16,12 +21,15 @@
       width: 2em;
       margin-block: auto;
       margin-left: 0.5em;
-      border-right: 2px solid #000;
+      border-right: 2px solid var(--purple);
       padding-inline: 0.5em;
     }
   }
 
   input {
+    &:focus {
+      outline: none !important;
+    }
     height: 4em;
     grid-row: 1;
     font-size: 1em;
@@ -45,6 +53,7 @@
     margin-block: auto;
     margin-left: auto;
     margin-right: 1em;
+    cursor: pointer;
 
     & > svg {
       border-radius: 50%;

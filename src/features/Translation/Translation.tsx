@@ -1,9 +1,15 @@
 import { Fragment } from "react";
+import "./Translation.style.scss";
 
 // Translate text from input and return JSX.
 // Formats into color coded sentences of words comprised of letters and ASL symbols.
 
-const Translation = ({ wordsFromInput }: { wordsFromInput: string[] }) => {
+interface ITranslation {
+  plainText: string[];
+  className?: string;
+}
+
+const Translation = ({ plainText, ...props }: ITranslation) => {
   let incr = 1;
 
   // -- -- Turn word into JSX. Determine sentence color code. Determine if end of sentence.
@@ -59,7 +65,7 @@ const Translation = ({ wordsFromInput }: { wordsFromInput: string[] }) => {
 
   // -- Renders output.
   // -- Process word with processWord function. If comma or sentence ending char; take out of word and place it after.
-  const translation = wordsFromInput.map((word: string) => {
+  const translation = plainText.map((word: string) => {
     const evenOrOdd = `word_${even ? "even" : "odd"}`;
 
     let isComma = "";
@@ -95,7 +101,7 @@ const Translation = ({ wordsFromInput }: { wordsFromInput: string[] }) => {
     );
   });
 
-  return <>{translation}</>;
+  return <div className={`${props.className} signs`}>{translation}</div>;
 };
 
 export default Translation;

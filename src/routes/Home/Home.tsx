@@ -10,27 +10,18 @@ export interface TranslateForm extends FormEvent<HTMLFormElement> {
 }
 
 const Home = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [setTranslationsInDB] = useSetTranslationsMutation();
-  const [wordsFromInput, setWordsFromInput] = useState<string[]>([
-    "A",
-    "short",
-    "sentence.",
-    "Followed",
-    "by",
-    "another.",
-    "Followed",
-    "by",
-    "a",
-    "little.",
-  ]);
-
   const { userId } = useAuth();
+  const [setTranslationsInDB] = useSetTranslationsMutation();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [wordsFromInput, setWordsFromInput] = useState<string[]>([]);
 
   // $ - After user input: split text and keep in state. Clear input.
   const onSubmit = (e: TranslateForm) => {
     e.preventDefault();
     const { value: text } = e.currentTarget.query;
+    if (!text) return;
+
     const inputEl = inputRef.current as HTMLInputElement;
 
     setWordsFromInput(text.split(" "));
@@ -40,6 +31,10 @@ const Home = () => {
     inputEl.value = "";
   };
 
+  const focusInput = () => {
+    (inputRef.current as HTMLInputElement).focus();
+  };
+
   return (
     <main className="home">
       <section className="home_input">
@@ -47,13 +42,14 @@ const Home = () => {
           id="translation-form"
           onSubmit={onSubmit}
           aria-label="Input for translation from English to ASL"
+          onBtnClick={focusInput}
         >
           <input
             ref={inputRef}
             type="text"
             name="query"
             placeholder="Write something..."
-            autoFocus
+            autoFocus={true}
           />
         </Form>
       </section>
@@ -65,14 +61,13 @@ const Home = () => {
             name="output"
             aria-label="Output from translation"
           >
-            <Translation wordsFromInput={wordsFromInput} />
+            <Translation
+              plainText={wordsFromInput}
+              className="output_signs"
+            />
           </output>
 
-          <div className="home_translation_box-bottom">
-            <button aria-roledescription="Toggle: ASL or English in output area">
-              Translation
-            </button>
-          </div>
+          <div className="home_translation_box-bottom"></div>
         </div>
       </section>
     </main>

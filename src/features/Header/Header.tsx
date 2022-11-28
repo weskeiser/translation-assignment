@@ -1,4 +1,4 @@
-import { useAuth } from "auth";
+import { useAuth } from "auth/hooks";
 import Mascot from "features/Mascot";
 import ProfileButton from "features/ProfileButton";
 import { useNavigate } from "react-router-dom";
@@ -14,20 +14,25 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="header_content">
-        {username ? <Mascot onClick={navigateHome} /> : null}
+      <nav className="header_nav">
+        <div className="header_nav-left">
+          {username ? <Mascot onClick={navigateHome} /> : null}
 
-        <nav>
           <button
             onClick={navigateHome}
             className="header_title"
           >
             Lost in Translation
           </button>
+        </div>
 
-          {username ? <ProfileButton username={username} /> : null}
-        </nav>
-      </div>
+        {username ? (
+          <ProfileButton
+            username={username}
+            className="header_nav-right"
+          />
+        ) : null}
+      </nav>
     </header>
   );
 };

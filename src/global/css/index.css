@@ -17,20 +17,28 @@
   --grey: #969696;
   --light-grey: #efefef;
   --white: #fff;
+
+  height: 100%;
 }
 
 * {
   font-family: Sanchez;
 }
 
+html {
+  height: 100%;
+  /* background-color: #fff; */
+}
+
 body {
-  /* background-color: bisque; */
-  background-color: var(--yellow);
+  background-color: bisque;
   color: var(--white);
+  height: 100%;
 }
 
 #root {
-  height: 100vh;
+  background-color: var(--yellow);
+  height: 100%;
   width: 100%;
   max-width: 1850px;
   margin-inline: auto;

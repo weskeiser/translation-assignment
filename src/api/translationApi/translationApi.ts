@@ -17,8 +17,6 @@ export const translationsApi = createApi({
           "Content-Type": "application/json",
         },
       }),
-
-      // invalidatesTags: [{ type: "authenticated" }],
     }),
 
     getUserById: rtk.query({
@@ -46,8 +44,6 @@ export const translationsApi = createApi({
         const { translations } = result;
         return translations;
       },
-
-      providesTags: [{ type: "translations" }],
     }),
 
     clearTranslations: rtk.mutation({
@@ -62,8 +58,6 @@ export const translationsApi = createApi({
           "Content-Type": "application/json",
         },
       }),
-
-      invalidatesTags: [{ type: "translations" }],
     }),
 
     setTranslations: rtk.mutation({

@@ -1,6 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import "./ProfileButton.style.scss";
 
-const ProfileButton = ({ username }: { username: string }) => {
+interface IProfileButton {
+  username: string;
+  className?: string;
+}
+
+const ProfileButton = ({ username, ...props }: IProfileButton) => {
   const navigate = useNavigate();
 
   const navigateProfile = () => {
@@ -10,7 +16,8 @@ const ProfileButton = ({ username }: { username: string }) => {
   return (
     <button
       onClick={navigateProfile}
-      className="header_profile"
+      {...props}
+      className={`${props.className} header_profile`}
     >
       <div className="header_profile_name">
         <p>{username}</p>
