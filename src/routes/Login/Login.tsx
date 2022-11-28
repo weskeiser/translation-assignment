@@ -1,10 +1,15 @@
 import {
   useCreateUserMutation,
   useLazyGetAllUsersQuery,
+  useLazyGetUserByIdQuery,
   useLazyGetUserByUsernameQuery,
 } from "api/translationApi";
+import { useAppSelector } from "appRedux/hooks";
+import { getCredentials } from "auth";
 import Form from "features/common/Form";
 import Mascot from "features/Mascot";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLogin } from "./Login.hooks";
 import "./Login.style.scss";
 import { AuthForm } from "./Login.types";
@@ -14,6 +19,31 @@ const Login = () => {
   const [getAllUsers] = useLazyGetAllUsersQuery();
   const [createUser] = useCreateUserMutation();
   const logUserIn = useLogin();
+
+  const [getUserById, userByIdResponse] = useLazyGetUserByIdQuery();
+  const { userId } = useAppSelector(getCredentials);
+  const token = localStorage.getItem("app42token");
+  const storageIdString = localStorage.getItem("app42userId");
+  const storageId = storageIdString ? parseInt(storageIdString) : false;
+  const navigate = useNavigate();
+  const { isSuccess, isError, data: fetchedUser } = userByIdResponse;
+
+  // $ - Redirect user if logged in
+  useEffect(() => {
+    if (!userId && storageId && token && userByIdResponse.isUninitialized) {
+      getUserById(storageId);
+    }
+
+    if (token && isSuccess) navigate("/", { replace: true });
+  }, [
+    getUserById,
+    token,
+    storageId,
+    userId,
+    userByIdResponse,
+    isSuccess,
+    navigate,
+  ]);
 
   // $ - Create user if new user and log user in. Log user in if existing.
   const handleLogin = async (e: AuthForm) => {

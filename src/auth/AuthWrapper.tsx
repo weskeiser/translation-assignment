@@ -30,6 +30,7 @@ export const AuthWrapper = ({ children }: IAuthWrapper) => {
   }, [getUserById, token, storageId, userId, userByIdResponse]);
 
   // -- 2. Authenticate by matching localStorage token with DB token
+
   useEffect(() => {
     if (token && isSuccess) {
       const [user] = fetchedUser;

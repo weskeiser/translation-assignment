@@ -15,6 +15,7 @@ const Profile = () => {
   const [clearTranslationsMutation] = useClearTranslationsMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const [translationShown, setTranslationShown] = useState<string[] | null>(
     null
   );
