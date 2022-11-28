@@ -1,91 +1,105 @@
 .header {
-  background-color: var(--yellow);
   border-bottom: 2px solid #47414155;
-  height: 10vh;
+  padding-bottom: 0.5em;
 
-  nav {
-    display: grid;
-    grid-template-columns: 3fr 1.2fr;
+  &_content {
+    background-color: var(--yellow);
+    height: 10vh;
+    display: flex;
+    max-width: 60em;
     margin-inline: auto;
-    max-width: 50em;
-    height: 100%;
 
-    & > .header_title {
-      text-align: left;
-      overflow-wrap: normal;
-      max-width: 12em;
-      height: 10vh;
-      font-size: 1.8em;
-      font-weight: 500;
+    & > .mascot {
+      height: 8vh;
       margin-block: auto;
-      margin-left: 0.5em;
-      background-color: var(--yellow);
-      color: #fff;
-      border: 0;
+      margin-left: 0.2em;
       cursor: pointer;
     }
 
-    & > .header_profile {
-      background-color: var(--yellow);
-      display: grid;
-      grid-template-columns: 4fr 2fr 0.5fr;
-      color: #fff;
-      border: 0;
-      cursor: pointer;
+    nav {
+      display: flex;
+      // display: grid;
+      // grid-template-columns: 1fr 1fr;
+      height: 100%;
+      width: 100%;
 
-      .header_profile_name {
-        background-color: #00000018;
-        width: 100%;
+      & > .header_title {
+        text-align: left;
+        overflow-wrap: normal;
+        max-width: 12em;
+        height: 10vh;
+        font-size: 1.5em;
+        font-weight: 500;
         margin-block: auto;
-        display: flex;
-        height: 4vh;
-        z-index: 0;
-
-        border-radius: 1em 0 0 1em;
-
-        p {
-          font-size: 1.2em;
-          margin: auto;
-        }
+        margin-left: 5vw;
+        background-color: var(--yellow);
+        color: var(--white);
+        border: 0;
+        cursor: pointer;
       }
 
-      .header_profile_circle {
+      & > .header_profile {
+        color: var(--white);
         background-color: var(--yellow);
-        z-index: 1;
-        border: 2px solid #fff;
-        border-radius: 50%;
-        margin: auto auto auto -0.5em;
-        height: 60%;
-        aspect-ratio: 1;
         display: grid;
-        overflow: hidden;
+        grid-template-columns: 4fr 2fr 0.5fr;
+        border: 0;
+        cursor: pointer;
+        margin-left: auto;
+        margin-right: 3em;
 
-        &-inner {
-          grid-row: 1;
-          grid-column: 1;
-          width: 40%;
-          height: 40%;
-          border-radius: 50%;
-          background-color: #fff;
-          margin: auto;
-          margin-top: 25%;
+        .header_profile_name {
+          background-color: #00000018;
+          width: 100%;
+          margin-block: auto;
+          padding-right: 1em;
+          display: flex;
+          height: 4vh;
+          z-index: 0;
+
+          border-radius: 1em 0 0 1em;
+
+          p {
+            font-size: 1.2em;
+            padding-left: 1em;
+            margin: auto;
+          }
         }
 
-        &-lower {
-          grid-row: 1;
-          grid-column: 1;
-          background-color: #fff;
-          margin: 65% auto 0 auto;
-          width: 70%;
-          height: 70%;
-          border-radius: 30% 60% 0 60%;
-          transform: rotate(45deg);
+        .header_profile_circle {
+          background-color: var(--yellow);
+          z-index: 1;
+          border: 2px solid var(--white);
+          border-radius: 50%;
+          margin: auto auto auto 0;
+          height: 60%;
+          aspect-ratio: 1;
+          display: grid;
+          overflow: hidden;
+
+          &-inner {
+            grid-row: 1;
+            grid-column: 1;
+            width: 40%;
+            height: 40%;
+            border-radius: 50%;
+            background-color: var(--white);
+            margin: auto;
+            margin-top: 25%;
+          }
+
+          &-lower {
+            grid-row: 1;
+            grid-column: 1;
+            background-color: var(--white);
+            margin: 65% auto 0 auto;
+            width: 70%;
+            height: 70%;
+            border-radius: 30% 60% 0 60%;
+            transform: rotate(45deg);
+          }
         }
       }
     }
-
-    // .header_profile_name {
-    //   background-color: green;
-    // }
   }
 }

@@ -1,31 +1,56 @@
-import { useGetTranslationsQuery } from "api/translationApi";
-import { useAppSelector } from "appRedux/hooks";
-import { getCredentials } from "auth";
+import {
+  useClearTranslationsMutation,
+  useGetTranslationsQuery,
+} from "api/translationApi";
+import { useAppDispatch } from "appRedux/hooks";
+import { setCredentials, useAuth } from "auth";
+import { useNavigate } from "react-router-dom";
 import "./Profile.style.scss";
 
 const Profile = () => {
-  const { userId } = useAppSelector(getCredentials);
-  const { data: translations } = useGetTranslationsQuery(1);
+  const { userId } = useAuth();
+  const { data: translations } = useGetTranslationsQuery(userId);
+  const [clearTranslationsMutation] = useClearTranslationsMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  console.log(userId);
-
-  const logOut = () => {
+  const signOut = () => {
     //clear history
+    clearTranslationsMutation(userId);
     //clear localStorage
+    localStorage.removeItem("app42token");
+    localStorage.removeItem("app42userId");
     //clear credentials
+    dispatch(setCredentials({ userId: null, token: "", username: "" }));
+
+    navigate("/login");
     //clear redirect
+  };
+
+  const clearTranslations = () => {
+    clearTranslationsMutation(userId);
   };
 
   return (
     <main className="profile">
-      <div className="profile_temp">
-        <h1>
-          You are logged in as <br /> *
-        </h1>
-        <button onClick={logOut}>Log out</button>
-      </div>
+      <section className="profile_upper">
+        <h1>Profile</h1>
 
-      <div className="profile_translations">
+        <div className="profile_upper_buttons">
+          <button
+            className="profile_upper_buttons-clear"
+            onClick={clearTranslations}
+          >
+            Clear History
+          </button>
+
+          <button onClick={signOut}>Log out</button>
+        </div>
+
+        <p>Translation history</p>
+      </section>
+
+      <section className="profile_translations">
         <dl className="profile_translations_list">
           {translations &&
             translations.map((item) => {
@@ -33,7 +58,7 @@ const Profile = () => {
             })}
         </dl>
         {/* <div className="profile_translations_decoration">asldkfj</div> */}
-      </div>
+      </section>
     </main>
   );
 };

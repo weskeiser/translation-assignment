@@ -1,12 +1,11 @@
-const useAuth = ({ setAuth }: { setAuth: any }) => {
-  const token = localStorage.getItem("app42token");
+import { useAppSelector } from "appRedux/hooks";
+import { useMemo } from "react";
+import { getCredentials } from "./Auth.slice";
 
-  if (!token) {
-    setAuth(false);
-    return <p>failed</p>;
-  }
+export const useAuth = () => {
+  const user = useAppSelector(getCredentials);
 
-  return <div>useAuth</div>;
+  return useMemo(() => {
+    return { ...user, userId: user.userId as number };
+  }, [user]);
 };
-
-export default useAuth;

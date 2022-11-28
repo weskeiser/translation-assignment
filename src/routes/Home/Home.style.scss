@@ -23,7 +23,7 @@
       width: clamp(90%, 90%, 70em);
 
       input {
-        border: 2px solid #fff;
+        border: 2px solid var(--white);
         padding-right: 4.5em;
       }
 
@@ -41,7 +41,7 @@
 
     &_box {
       filter: drop-shadow(0 0 0.5em #00000077);
-      background-color: #fff;
+      background-color: var(--white);
       border-radius: 1em;
       margin: auto;
       margin-top: 1em;

@@ -1,23 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { baseUrl } from "api";
 import { User } from "global/interfaces";
-
-const fetchWithBQ = async (url: string, options?: any) => {
-  return fetch(`${baseUrl}/translations${url}`, {
-    headers: {
-      "X-API-Key": "98osduf98sdlkfj342sdlkfj",
-      "Content-Type": "application/json",
-    },
-    ...options,
-  })
-    .then((res) => {
-      if (!res.ok) {
-        console.log(res);
-      }
-      return res.json();
-    })
-    .then((data) => data);
-};
+import { baseUrl, fetchWithBQ } from "./helpers";
 
 export const translationsApi = createApi({
   reducerPath: "translationsApi",
@@ -34,11 +17,8 @@ export const translationsApi = createApi({
           "Content-Type": "application/json",
         },
       }),
-      // transformResponse: ({ username }: User) => {
-      //   return username;
-      // },
 
-      invalidatesTags: [{ type: "authenticated" }],
+      // invalidatesTags: [{ type: "authenticated" }],
     }),
 
     getUserById: rtk.query({
@@ -62,7 +42,7 @@ export const translationsApi = createApi({
 
     getTranslations: rtk.query<string[], number>({
       query: (userId: number) => `/?id=${userId}`,
-      transformResponse: ([result]: User[]) => {
+      transformResponse: ([result]: User[], bla, bll) => {
         const { translations } = result;
         return translations;
       },
@@ -70,9 +50,26 @@ export const translationsApi = createApi({
       providesTags: [{ type: "translations" }],
     }),
 
+    clearTranslations: rtk.mutation({
+      query: (userId) => ({
+        url: `/${userId}`,
+        method: "PATCH",
+        body: {
+          translations: [],
+        },
+        headers: {
+          "X-API-Key": "98osduf98sdlkfj342sdlkfj",
+          "Content-Type": "application/json",
+        },
+      }),
+
+      invalidatesTags: [{ type: "translations" }],
+    }),
+
     setTranslations: rtk.mutation({
-      async queryFn({ id, text }: { id: number; text: string }) {
-        const [fetchedUser]: User[] = await fetchWithBQ(`?id=${id}`);
+      async queryFn({ userId, text }: { userId: number; text: string }) {
+        // $ - Fetch translations history and unshift new addition. Keep entries capped at 10 translations.
+        const [fetchedUser]: User[] = await fetchWithBQ(`?id=${userId}`);
         if (!fetchedUser) return { error: "blabla" };
 
         const { translations: prevTranslations } = fetchedUser;
@@ -84,7 +81,8 @@ export const translationsApi = createApi({
 
         const newTranslations = prevTranslations;
 
-        return await fetchWithBQ(`/${id}`, {
+        // $ - Replace translations history with new addition.
+        return await fetchWithBQ(`/${userId}`, {
           method: "PATCH",
           body: JSON.stringify({
             translations: newTranslations,
@@ -106,6 +104,7 @@ export const {
   useGetUserByIdQuery,
   useGetAllUsersQuery,
   useCreateUserMutation,
+  useClearTranslationsMutation,
   useGetTranslationsQuery,
   useSetTranslationsMutation,
 } = translationsApi;

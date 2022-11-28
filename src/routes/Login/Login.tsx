@@ -3,9 +3,10 @@ import {
   useLazyGetAllUsersQuery,
   useLazyGetUserByUsernameQuery,
 } from "api/translationApi";
-import { useAppDispatch, useAppSelector } from "appRedux/hooks";
-import { getCredentials, setCredentials } from "auth";
+import { useAppDispatch } from "appRedux/hooks";
+import { setCredentials } from "auth";
 import Form from "features/common/Form";
+import Mascot from "features/Mascot";
 import { useNavigate } from "react-router-dom";
 import "./Login.style.scss";
 import { AuthForm } from "./Login.types";
@@ -18,10 +19,7 @@ const Login = () => {
   const [getAllUsers] = useLazyGetAllUsersQuery();
   const [createUser] = useCreateUserMutation();
 
-  // check for token
-  //-- const { userId } = useAppSelector(getCredentials);
-  //-- if (userId) navigate("/");
-
+  // $ - Create user if new user and log user in
   const loginUser = async (e: AuthForm) => {
     e.preventDefault();
 
@@ -43,7 +41,7 @@ const Login = () => {
       id: newId,
       username,
       translations: [],
-      token: username,
+      token: newToken,
     };
 
     await createUser(newUser);
@@ -51,7 +49,7 @@ const Login = () => {
     localStorage.setItem("app42token", newToken);
     localStorage.setItem("app42userId", newId);
 
-    dispatch(setCredentials({ userId: newId, token: newToken }));
+    dispatch(setCredentials({ userId: newId, token: newToken, username }));
 
     navigate("/");
   };
@@ -64,26 +62,12 @@ const Login = () => {
           <h2>Get started</h2>
         </div>
 
-        <div
-          className="login-top_robot-cloud"
-          aria-label="Page mascot logo"
-        >
-          <img
-            src="/images/Logo.png"
-            alt="Smiling robot in open embrace"
-            className="login-top_robot-cloud_robot"
-          />
-          <img
-            src="/images/Splash.svg"
-            alt="White cloud"
-            className="login-top_robot-cloud_cloud"
-          />
-        </div>
+        <Mascot />
       </section>
 
       <section className="login-middle">
         <Form
-          aria-label="Username input"
+          aria-label="Signup and login form"
           onSubmit={loginUser}
         >
           <input
@@ -106,7 +90,7 @@ const Login = () => {
         className="login-bottom"
         aria-hidden
       >
-        <div className="keyboard"></div>
+        {/* <div className="keyboard"></div> */}
       </section>
     </main>
   );

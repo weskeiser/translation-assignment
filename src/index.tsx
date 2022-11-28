@@ -1,10 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { Provider as ReduxProvider } from "react-redux";
-import { store } from "./appRedux/store";
-
-import "./global/css/index.css";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -12,9 +8,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import App from "./App";
-import { Login, Home, Error } from "./routes";
+import { Provider as ReduxProvider } from "react-redux";
+
+import "./global/css/index.css";
+import { store } from "./appRedux/store";
 import { AuthWrapper } from "auth";
+import App from "./App";
+import { Login, Home, Profile } from "./routes";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
@@ -24,7 +24,6 @@ const router = createBrowserRouter(
     <Route
       path="/*"
       element={<App />}
-      errorElement={<Error />}
     >
       <Route
         path="login"
@@ -36,6 +35,15 @@ const router = createBrowserRouter(
         element={
           <AuthWrapper>
             <Home></Home>
+          </AuthWrapper>
+        }
+      />
+
+      <Route
+        path="profile"
+        element={
+          <AuthWrapper>
+            <Profile></Profile>
           </AuthWrapper>
         }
       />

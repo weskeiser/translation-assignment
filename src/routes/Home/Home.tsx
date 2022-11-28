@@ -1,6 +1,7 @@
 import { useSetTranslationsMutation } from "api/translationApi";
+import { useAuth } from "auth";
 import Form from "features/common/Form";
-import React from "react";
+import Translation from "features/Translation";
 import { FormEvent, useRef, useState } from "react";
 import "./Home.style.scss";
 
@@ -10,6 +11,7 @@ export interface TranslateForm extends FormEvent<HTMLFormElement> {
 
 const Home = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [setTranslationsInDB] = useSetTranslationsMutation();
   const [wordsFromInput, setWordsFromInput] = useState<string[]>([
     "A",
     "short",
@@ -23,128 +25,49 @@ const Home = () => {
     "little.",
   ]);
 
-  const [setTranslationsInDB] = useSetTranslationsMutation();
+  const { userId } = useAuth();
 
+  // $ - After user input: split text and keep in state. Clear input.
   const onSubmit = (e: TranslateForm) => {
     e.preventDefault();
     const { value: text } = e.currentTarget.query;
+    const inputEl = inputRef.current as HTMLInputElement;
 
     setWordsFromInput(text.split(" "));
 
-    setTranslationsInDB({ id: 1, text });
+    setTranslationsInDB({ userId, text });
 
-    (inputRef.current as HTMLInputElement).value = "";
-  };
-
-  const showOutput = (wordsFromInput: string[]) => {
-    let incr = 1;
-    let even = true;
-
-    const signsFromWord = (word: string) => {
-      return word.split("").map((letter: string, idx) => {
-        const regex = /[A-Z]/gi;
-        const alphaNumeric = letter.match(regex);
-
-        if (!alphaNumeric) {
-          const endOfWord = idx === word.length - 1;
-          if (!endOfWord) return letter;
-
-          switch (letter) {
-            case "?": {
-              even = !even;
-              return [letter];
-            }
-            case "!": {
-              even = !even;
-              return [letter];
-            }
-            case ".": {
-              even = !even;
-              return [letter];
-            }
-            default: {
-              return letter;
-            }
-          }
-        }
-
-        return (
-          <>
-            <span
-              className="sign"
-              key={Math.random() + letter + Math.random() + incr++}
-            >
-              <img
-                src={`images/signs/${letter.toLowerCase()}.png`}
-                alt={`Letter ${letter} in ASL`}
-              ></img>
-              <span className="letter">{letter}</span>
-            </span>
-          </>
-        );
-      });
-    };
-
-    return wordsFromInput.map((word: string) => {
-      const evenOrOdd = `word_${even ? "even" : "odd"}`;
-
-      let signs = signsFromWord(word);
-      const lastLetter = signs[signs.length - 1];
-      let endOfSentence = false;
-
-      if (Array.isArray(lastLetter)) {
-        endOfSentence = true;
-        signs.pop();
-      }
-
-      return (
-        <React.Fragment key={Math.random() + word + incr++}>
-          <span
-            title={word}
-            className={`word ${evenOrOdd}`}
-          >
-            {signs}
-          </span>
-          {endOfSentence ? (
-            <span className={`word ${evenOrOdd} end-char`}>
-              <span>{lastLetter}</span>
-            </span>
-          ) : null}
-        </React.Fragment>
-      );
-    });
+    inputEl.value = "";
   };
 
   return (
     <main className="home">
-      <section
-        className="home_input"
-        aria-label="Input for translation"
-      >
+      <section className="home_input">
         <Form
           id="translation-form"
           onSubmit={onSubmit}
+          aria-label="Input for translation from English to ASL"
         >
           <input
             ref={inputRef}
             type="text"
             name="query"
             placeholder="Write something..."
+            autoFocus
           />
         </Form>
       </section>
 
-      <section
-        className="home_translation"
-        aria-label="Output for translation"
-      >
+      <section className="home_translation">
         <div className="home_translation_box">
           <output
             form="translation-form"
             name="output"
+            aria-label="Output from translation"
           >
-            {showOutput(wordsFromInput)}
+            <Translation wordsFromInput={wordsFromInput} />
           </output>
+
           <div className="home_translation_box-bottom">
             <button aria-roledescription="Toggle: ASL or English in output area">
               Translation

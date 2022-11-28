@@ -29,35 +29,18 @@ main {
       }
     }
 
-    &_robot-cloud {
+    & > .mascot {
       margin: auto;
       grid-column: 1;
       grid-row: 1/2;
-      display: grid;
-
-      img {
-        grid-row: 1;
-        grid-column: 1;
-      }
-
-      &_cloud {
-        margin: auto;
-        margin-top: -1.3em;
-        width: 9em;
-      }
-
-      &_robot {
-        margin: auto;
-        width: 6em;
-        z-index: 1;
-      }
+      width: 10em;
     }
   }
 
   &-middle {
     grid-row: 3/5;
     grid-column: 1;
-    background-color: #fff;
+    background-color: var(--white);
     filter: drop-shadow(0 0 0.5em #00000077);
     margin-inline: auto;
     width: 90%;
@@ -81,7 +64,7 @@ main {
 
   &-bottom {
     grid-column: 1;
-    background-color: #fff;
+    background-color: var(--white);
     grid-row: 4/7;
     // width: 100%;
     // padding-inline: 5em;

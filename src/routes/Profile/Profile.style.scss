@@ -2,29 +2,49 @@
   display: grid;
   grid-template-rows: 1fr 1fr;
 
-  &_temp {
+  &_upper {
     background-color: var(--yellow);
     height: 100%;
     display: grid;
 
     h1 {
-      font-size: 2em;
+      font-size: 3em;
+      text-align: center;
+      margin: auto;
+    }
+
+    p {
+      font-size: 2.5em;
       text-align: center;
       margin: auto;
       line-height: 1.5em;
     }
 
-    button {
+    &_buttons {
       margin: auto;
-      width: 6em;
-      height: 3em;
-      font-size: 2em;
-      text-transform: uppercase;
-      font-weight: 600;
-      border-radius: 1em;
-      border: 0;
-      color: #fff;
-      background-color: rgb(167, 36, 36);
+      display: flex;
+      gap: 5vw;
+      width: clamp(1em, 100%, 30em);
+      // width: 100%;
+
+      button {
+        margin: auto;
+        width: 6em;
+        height: 3em;
+        font-size: 1.5em;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-radius: 1em;
+        border: 0;
+        color: var(--white);
+        background-color: rgb(138, 45, 45);
+        filter: drop-shadow(0 0 0.5em #00000044);
+        cursor: pointer;
+      }
+
+      .profile_upper_buttons-clear {
+        background-color: rgb(173, 105, 9);
+      }
     }
   }
 
@@ -36,7 +56,7 @@
 
     &_list {
       filter: drop-shadow(0 0 0.5em #00000077);
-      background-color: #fff;
+      background-color: var(--white);
       width: clamp(20em, 60em, 90%);
       border-radius: 1em;
       min-height: 70%;
