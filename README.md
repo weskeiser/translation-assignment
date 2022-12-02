@@ -8,6 +8,8 @@
 
 The app handles the routing with React Router and the state with Redux Toolkit and Redux Toolkit Query. Through mindfulness of **naming**, **structure** and **architecture** the repository should with the simple documentation below be easily navigated and understood.
 
+Link to Figma: https://www.figma.com/file/3ybVdk4yk4Qi5oPowsQrK1/Translation-App?node-id=0%3A1&t=BCxW67HxwD32ms5a-1
+
 > The styling is handled with SCSS in bite size, component encapsulated files using the BEM naming convention
 >
 > The routing is handled with React Router.

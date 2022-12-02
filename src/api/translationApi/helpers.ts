@@ -1,4 +1,4 @@
-export const baseUrl = "https://translation-wes.herokuapp.com";
+export const baseUrl = "https://www.komput.no";
 
 export const fetchWithBQ = async (url: string, options?: any) => {
   return fetch(`${baseUrl}/translations${url}`, {
